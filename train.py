@@ -1,4 +1,5 @@
 ## main.py文件
+import time
 import torch
 import argparse
 import torch.nn as nn
@@ -68,6 +69,7 @@ optimizer = optim.Adam(model.parameters(), lr=0.01) # 此处黄子昱也随便�
 device = torch.device("cuda:"+local_rank)
 
 for epoch in range(100):
+    t = time.time()
     # 新增2：设置sampler的epoch，DistributedSampler需要这个来维持各个进程之间的相同随机数种子
     trainloader.sampler.set_epoch(epoch)
     # 后面这部分，则与原来完全一致了。
@@ -77,6 +79,7 @@ for epoch in range(100):
         loss = F.nll_loss(prediction, label)
         loss.backward()
         optimizer.step()
+    print("Epoch train time {:.2f}".format(time.time() - t))
 # 1. save模型的时候，和DP模式一样，有一个需要注意的点：保存的是model.module而不是model。
 #    因为model其实是DDP model，参数是被`model=DDP(model)`包起来的。
 # 2. 我只需要在进程0上保存一次就行了，避免多次保存重复的东西。
