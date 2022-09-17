@@ -46,3 +46,8 @@ for epoch in range(num_epochs):
         loss.backward()
         optimizer = optim.SGD(ddp_model.parameters(), lr=0.001)
         optimizer.step()
+# 1. save模型的时候，和DP模式一样，有一个需要注意的点：保存的是model.module而不是model。
+#    因为model其实是DDP model，参数是被`model=DDP(model)`包起来的。
+# 2. 我只需要在进程0上保存一次就行了，避免多次保存重复的东西。
+if dist.get_rank() == 0:
+    torch.save(model.module, "saved_model.ckpt")
