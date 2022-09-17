@@ -1,5 +1,5 @@
 ## main.py文件
-import torch.nn.parallel.DistributedDataParallel as DDP
+from torch.nn.parallel import DistributedDataParallel as DDP
 import torch
 # 新增：
 import torch.distributed as dist
