@@ -40,7 +40,7 @@ train_sampler = torch.utils.data.distributed.DistributedSampler(my_trainset)
 trainloader = torch.utils.data.DataLoader(my_trainset, batch_size=50, sampler=train_sampler) # 此处黄子昱随便设置了batch-size。。。
 
 
-for epoch in range(num_epochs):
+for epoch in range(100):
     # 新增2：设置sampler的epoch，DistributedSampler需要这个来维持各个进程之间的相同随机数种子
     trainloader.sampler.set_epoch(epoch)
     # 后面这部分，则与原来完全一致了。
