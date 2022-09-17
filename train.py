@@ -11,7 +11,7 @@ FLAGS = parser.parse_args()
 local_rank = FLAGS.local_rank
 
 # 新增：DDP backend初始化
-torch.cuda.set_device(local_rank)
+torch.cuda.set_device('cuda:'+local_rank)
 dist.init_process_group(backend='nccl')  # nccl是GPU设备上最快、最推荐的后端
 
 # 构造模型
