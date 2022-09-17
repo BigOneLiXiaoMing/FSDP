@@ -37,7 +37,7 @@ my_trainset = torchvision.datasets.CIFAR10(root='/nas/data/cifar-10', download=F
 #       sampler的原理，后面也会介绍。
 train_sampler = torch.utils.data.distributed.DistributedSampler(my_trainset)
 # 需要注意的是，这里的batch_size指的是每个进程下的batch_size。也就是说，总batch_size是这里的batch_size再乘以并行数(world_size)。
-trainloader = torch.utils.data.DataLoader(my_trainset, batch_size=batch_size, sampler=train_sampler)
+trainloader = torch.utils.data.DataLoader(my_trainset, batch_size=50, sampler=train_sampler) # 此处黄子昱随便设置了batch-size。。。
 
 
 for epoch in range(num_epochs):
