@@ -29,7 +29,7 @@ model = nn.Linear(10, 10).to(device)
 # 可能的load模型...
 
 # 新增5：之后才是初始化DDP模型
-model = DDP(model, device_ids=[local_rank], output_device=local_rank)
+model = DDP(model, device_ids=[int(local_rank)], output_device=int(local_rank))
 
 my_trainset = torchvision.datasets.CIFAR10(root='./data', train=True)
 # 新增1：使用DistributedSampler，DDP帮我们把细节都封装起来了。用，就完事儿！
