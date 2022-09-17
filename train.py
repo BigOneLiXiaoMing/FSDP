@@ -5,6 +5,7 @@ import torch.nn as nn
 import torchvision
 import torch.nn.functional as F
 import torch.optim as optim
+from torchvision import datasets, transforms
 
 # 新增1:依赖
 import torch.distributed as dist
@@ -34,14 +35,25 @@ model = nn.Linear(10, 10).to(device)
 # 新增5：之后才是初始化DDP模型
 model = DDP(model, device_ids=[int(local_rank)], output_device=int(local_rank))
 
-my_trainset = torchvision.datasets.CIFAR10(root='/nas/data/cifar-10', download=False, train=True)
+# my_trainset = torchvision.datasets.CIFAR10(root='/nas/data/cifar-10', download=False, train=True)
+
+
+transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize((0.1307,), (0.3081,))
+])
+my_trainset = datasets.MNIST(root='/nas/data/cifar-10', train=True, download=False,
+                          transform=transform)
+
+
+
 # 新增1：使用DistributedSampler，DDP帮我们把细节都封装起来了。用，就完事儿！
 #       sampler的原理，后面也会介绍。
 train_sampler = torch.utils.data.distributed.DistributedSampler(my_trainset)
 # 需要注意的是，这里的batch_size指的是每个进程下的batch_size。也就是说，总batch_size是这里的batch_size再乘以并行数(world_size)。
 trainloader = torch.utils.data.DataLoader(my_trainset, batch_size=50, sampler=train_sampler) # 此处黄子昱随便设置了batch-size。。。
 
-optimizer = optim.Adam(model.parameters(), lr=0.01)
+optimizer = optim.Adam(model.parameters(), lr=0.01) # 此处黄子昱也随便设了一个0.01
 
 for epoch in range(100):
     # 新增2：设置sampler的epoch，DistributedSampler需要这个来维持各个进程之间的相同随机数种子
