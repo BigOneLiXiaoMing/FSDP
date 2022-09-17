@@ -7,9 +7,10 @@ from torchvision import datasets, transforms
 from torch.optim.lr_scheduler import StepLR
 from utils import train,test,get_net
 import time
-
+import torch.distributed as dist
 
 def main():
+    dist.init_process_group("nccl", init_method='env://')  # init_method方式修改
     # Training settings
     parser = argparse.ArgumentParser(description='PyTorch MNIST Example')
     parser.add_argument(
@@ -45,6 +46,8 @@ def main():
                         help='For Saving the current Model')
     parser.add_argument('--tensorized', type=bool, default=False,
                         help='Run the tensorized model')
+    parser.add_argument("--local_rank", type=int)  # 增加local_rank
+
     args = parser.parse_args()
     use_cuda = not args.no_cuda and torch.cuda.is_available()
 
@@ -73,6 +76,8 @@ def main():
     test_loader = torch.utils.data.DataLoader(dataset2, **test_kwargs)
 
     model = get_net(args).to(device)
+
+    model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.local_rank], output_device=args.local_rank)
 
     print(model)
 
