@@ -1,6 +1,7 @@
 ## main.py文件
 import torch
 import argparse
+import torch.nn as nn
 
 # 新增1:依赖
 import torch.distributed as dist
