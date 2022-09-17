@@ -54,7 +54,7 @@ train_sampler = torch.utils.data.distributed.DistributedSampler(my_trainset)
 trainloader = torch.utils.data.DataLoader(my_trainset, batch_size=50, sampler=train_sampler) # 此处黄子昱随便设置了batch-size。。。
 
 optimizer = optim.Adam(model.parameters(), lr=0.01) # 此处黄子昱也随便设了一个0.01
-device = torch.device("cuda"+local_rank)
+device = torch.device("cuda:"+local_rank)
 
 for epoch in range(100):
     # 新增2：设置sampler的epoch，DistributedSampler需要这个来维持各个进程之间的相同随机数种子
