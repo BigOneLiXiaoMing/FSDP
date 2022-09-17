@@ -15,7 +15,8 @@ local_rank = FLAGS.local_rank
 
 # 新增3：DDP backend初始化
 #   a.根据local_rank来设定当前使用哪块GPU
-torch.cuda.set_device(local_rank)
+# torch.cuda.set_device(local_rank)
+torch.cuda.set_device('cuda:'+local_rank)
 #   b.初始化DDP，使用默认backend(nccl)就行。如果是CPU模型运行，需要选择其他后端。
 dist.init_process_group(backend='nccl')
 
