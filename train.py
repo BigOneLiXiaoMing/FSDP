@@ -2,6 +2,7 @@
 import torch
 # 新增：
 import torch.distributed as dist
+import torch.nn as nn
 
 # 新增：从外面得到local_rank参数
 import argparse
