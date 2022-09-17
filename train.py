@@ -22,7 +22,8 @@ dist.init_process_group(backend='nccl')
 
 # 新增4：定义并把模型放置到单独的GPU上，需要在调用`model=DDP(model)`前做哦。
 #       如果要加载模型，也必须在这里做哦。
-device = torch.device("cuda", local_rank)
+# device = torch.device("cuda", local_rank)
+device = torch.device("cuda:"+local_rank)
 model = nn.Linear(10, 10).to(device)
 # 可能的load模型...
 
