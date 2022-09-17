@@ -29,7 +29,7 @@ dist.init_process_group(backend='nccl')
 #       如果要加载模型，也必须在这里做哦。
 # device = torch.device("cuda", local_rank)
 device = torch.device("cuda:"+local_rank)
-model = nn.Linear(10, 10).to(device)
+model = nn.Linear(784, 10).to(device)
 # 可能的load模型...
 
 # 新增5：之后才是初始化DDP模型
