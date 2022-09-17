@@ -21,7 +21,7 @@ dist.init_process_group(backend='nccl')  # nccl是GPU设备上最快、最推荐
 device = torch.device("cuda:"+local_rank)
 model = nn.Linear(10, 10).to(device)
 # 新增：构造DDP model
-model = DDP(model, device_ids=[local_rank], output_device=local_rank)
+model = DDP(model, device_ids=[int(local_rank)], output_device=int(local_rank))
 
 # 前向传播
 outputs = model(torch.randn(20, 10).to(rank))
