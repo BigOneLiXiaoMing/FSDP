@@ -72,8 +72,15 @@ def main():
                        transform=transform)
     dataset2 = datasets.MNIST('../data', train=False,
                        transform=transform)
-    train_loader = torch.utils.data.DataLoader(dataset1,**train_kwargs)
-    test_loader = torch.utils.data.DataLoader(dataset2, **test_kwargs)
+
+    train_sampler = torch.utils.data.distributed.DistributedSampler(dataset1, shuffle=True)
+    train_loader = torch.utils.data.DataLoader(dataset1, batch_size=args.batch_size, sampler=train_sampler)
+    test_sampler = torch.utils.data.distributed.DistributedSampler(dataset2, shuffle=True)
+    test_loader = torch.utils.data.DataLoader(dataset2, batch_size=args.batch_size, sampler=test_sampler)
+
+
+    # train_loader = torch.utils.data.DataLoader(dataset1,**train_kwargs)
+    # test_loader = torch.utils.data.DataLoader(dataset2, **test_kwargs)
 
     model = get_net(args).to(device)
 
