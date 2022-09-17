@@ -42,7 +42,7 @@ transform = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize((0.1307,), (0.3081,))
 ])
-my_trainset = datasets.MNIST(root='/nas/data/cifar-10', train=True, download=False,
+my_trainset = datasets.MNIST('../data', train=True, download=True,
                           transform=transform)
 
 
