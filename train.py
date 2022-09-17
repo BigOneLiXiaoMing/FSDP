@@ -2,6 +2,7 @@
 import torch
 import argparse
 import torch.nn as nn
+import torchvision
 
 # 新增1:依赖
 import torch.distributed as dist
