@@ -42,7 +42,7 @@ transform = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize((0.1307,), (0.3081,))
 ])
-my_trainset = datasets.MNIST('../data', train=True, download=True,
+my_trainset = datasets.MNIST(root='/nas/data/cifar-10', train=True, download=False,
                           transform=transform)
 
 
@@ -54,13 +54,14 @@ train_sampler = torch.utils.data.distributed.DistributedSampler(my_trainset)
 trainloader = torch.utils.data.DataLoader(my_trainset, batch_size=50, sampler=train_sampler) # 此处黄子昱随便设置了batch-size。。。
 
 optimizer = optim.Adam(model.parameters(), lr=0.01) # 此处黄子昱也随便设了一个0.01
+device = torch.device("cuda"+local_rank)
 
 for epoch in range(100):
     # 新增2：设置sampler的epoch，DistributedSampler需要这个来维持各个进程之间的相同随机数种子
     trainloader.sampler.set_epoch(epoch)
     # 后面这部分，则与原来完全一致了。
     for batch_idx, (data, label) in enumerate(trainloader):
-        data, label = data.device("cuda:"+local_rank), label.device("cuda:"+local_rank)
+        data, label = data.to(device), label.to(device)
         prediction = model(data)
         loss = F.nll_loss(prediction, label)
         loss.backward()
