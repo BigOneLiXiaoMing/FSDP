@@ -10,7 +10,7 @@ import time
 import torch.distributed as dist
 
 def main():
-    dist.init_process_group("nccl", init_method='env://')  # init_method方式修改
+    dist.init_process_group(backend="nccl")
     # Training settings
     parser = argparse.ArgumentParser(description='PyTorch MNIST Example')
     parser.add_argument(
