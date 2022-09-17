@@ -32,7 +32,7 @@ model = nn.Linear(10, 10).to(device)
 # 新增5：之后才是初始化DDP模型
 model = DDP(model, device_ids=[int(local_rank)], output_device=int(local_rank))
 
-my_trainset = torchvision.datasets.CIFAR10(root='./data', download=True, train=True)
+my_trainset = torchvision.datasets.CIFAR10(root='/nas/data/cifar-10', download=False, train=True)
 # 新增1：使用DistributedSampler，DDP帮我们把细节都封装起来了。用，就完事儿！
 #       sampler的原理，后面也会介绍。
 train_sampler = torch.utils.data.distributed.DistributedSampler(my_trainset)
