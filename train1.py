@@ -6,13 +6,17 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from torchvision import datasets, transforms
-from torch.distributed.fsdp import FullyShardedDataParallel as FSDP
+# from torch.distributed.fsdp import FullyShardedDataParallel as FSDP
+# from torch.distributed.fsdp import (
+#    CPUOffload,
+# )
+
+from fairscale.nn.data_parallel import FullyShardedDataParallel as FSDP
+
 # from torch.distributed.fsdp.wrap import (
 #    size_based_auto_wrap_policy,
 # )
-from torch.distributed.fsdp import (
-   CPUOffload,
-)
+
 
 # 新增1:依赖
 import torch.distributed as dist
@@ -52,8 +56,8 @@ model = Net().to(device)
 
 # 新增5：之后才是初始化DDP模型
 model = DDP(model, device_ids=[int(local_rank)], output_device=int(local_rank))
-model = FSDP(model, cpu_offload=CPUOffload(offload_params=True),)
-
+# model = FSDP(model, cpu_offload=CPUOffload(offload_params=True),)
+model = FSDP(model)
 
 transform = transforms.Compose([
     transforms.ToTensor(),
